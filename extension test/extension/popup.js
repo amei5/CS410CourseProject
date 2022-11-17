@@ -3,8 +3,9 @@ $(function(){
     
     $('#submit').click(function(){
 		
-		var search_topic = $('#text').val();
-
+		var search_topic = $('#search').val();
+		
+				
 		if (search_topic){
                 chrome.runtime.sendMessage(
 					{topic: search_topic},
@@ -13,10 +14,9 @@ $(function(){
 						alert(result.summary);
 						
 						var notifOptions = {
-							type: "basic",
-							//iconUrl: "icon48.png",
-							title: "Search Query",
-							message: result.summary
+                        type: "basic",
+                        title: "WikiPedia Summary For Your Result",
+                        message: result.summary
 						};
 						
 						chrome.notifications.create('WikiNotif', notifOptions);
@@ -25,7 +25,7 @@ $(function(){
 		}
 			
 			
-		$('text').val('');
+		$('#search').val('');
 		
     });
 });
