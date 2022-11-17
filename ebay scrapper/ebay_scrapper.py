@@ -1,58 +1,80 @@
-import lxml
 import requests
 
 from bs4 import BeautifulSoup
 
 headers = {
-    "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19582"
+    'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19582'
 }
 
-base_url = "https://www.ebay.com/sch/i.html?_nkw={}"
+base_url = 'https://www.ebay.com/sch/i.html?_nkw={}'
 
 def getEbayResults(query):
     url = base_url.format(query)
     html = requests.get(url, headers=headers).text
     soup = BeautifulSoup(html, 'lxml')
 
-    items = []
+    results = []
 
-    for item in soup.select('.s-item__wrapper.clearfix')[1:]:
-        title = item.select_one('.s-item__title').text
+    # skip first element since it's not an actual listing
+    listings = soup.select('.s-item__wrapper.clearfix')[1:]
 
-        link = item.select_one('.s-item__link')['href']
-        
-        item_html = requests.get(link, headers=headers).text
-        item_soup = BeautifulSoup(item_html, 'lxml')
+    for item in listings:
+        try:
+            title = item.select_one('.s-item__title').text
+        except:
+            title = ''
 
-        iframe_src = item_soup.select_one("#desc_ifr").attrs["src"]
-        desc_html = requests.get(iframe_src,headers=headers).text
-        desc_soup = BeautifulSoup(desc_html, 'lxml')
-        desc = desc_soup.find('div', id='ds_div').text.strip()
+        try:
+            link = item.select_one('.s-item__link')['href']
+        except:
+            link = ''
         
         try:
             image = item.select_one('.s-item__image-img')['src']
         except:
-            image = None
+            image = ''
 
         try:
             price = item.select_one('.s-item__price').text
         except:
-            price = None
+            price = ''
 
-        items.append({
-            "title": title,
+        description = extractDescription(link)
+
+        result = {
+            'title': title,
             'link': link,
-            "price": price,
-            'description': desc,
+            'price': price,
+            'description': description,
             'image': image,
-        })
+        }
+
+        results.append(result)    
+        print(result)
     
-    return items
+    return results
+
+# access item page and extract item's description
+def extractDescription(link):
+    if link == '':
+        return ''
+    item_html = requests.get(link, headers=headers).text
+    item_soup = BeautifulSoup(item_html, 'lxml')
+    iframe_src = item_soup.select_one("#desc_ifr").attrs['src']
+    desc_html = requests.get(iframe_src,headers=headers).text
+    desc_soup = BeautifulSoup(desc_html, 'lxml')
+
+    try:
+        desc = desc_soup.find('div', id='ds_div').text.strip()
+    except:
+        desc = ''
+    
+    return desc
 
 
 if __name__ == '__main__':
     query = user_input = input("Search for: ")
     query = query.strip()
-    getEbayResults(query)
+    results = getEbayResults(query)
 
