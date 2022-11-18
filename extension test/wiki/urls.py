@@ -5,5 +5,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    url(r'^get_wiki_summary/$', views.get_wiki_summary, name='get_wiki_summary'),
+    url(r'^get_ebay_summary/$', views.get_ebay_summary, name='get_ebay_summary'),
 ]

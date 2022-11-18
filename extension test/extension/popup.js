@@ -1,6 +1,5 @@
 $(function(){
 
-    
     $('#submit').click(function(){
 		
 		var search_topic = $('#search').val();
