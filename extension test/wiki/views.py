@@ -23,43 +23,44 @@ def get_ebay_summary(request):
     base_url = "https://www.ebay.com/sch/i.html?_nkw={}"
 
     print('topic:', topic)
+
     url = base_url.format(topic)
     html = requests.get(url).text
     soup = BeautifulSoup(html, 'lxml')
 
-    items = []
+    results = []
 
-    for item in soup.select('.s-item__wrapper.clearfix')[1:]:
-        title = item.select_one('.s-item__title').text
+    # skip first element since it's not an actual listing
+    listings = soup.select('.s-item__wrapper.clearfix')[1:]
 
-        link = item.select_one('.s-item__link')['href']
+    for item in listings:
+        try:
+            title = item.select_one('.s-item__title').text
+        except:
+            title = ''
 
-        item_html = requests.get(link).text
-        item_soup = BeautifulSoup(item_html, 'lxml')
-
-        iframe_src = item_soup.select_one("#desc_ifr").attrs["src"]
-        desc_html = requests.get(iframe_src).text
-        desc_soup = BeautifulSoup(desc_html, 'lxml')
-        desc = desc_soup.find('div', id='ds_div').text.strip()
+        try:
+            link = item.select_one('.s-item__link')['href']
+        except:
+            link = ''
 
         try:
             image = item.select_one('.s-item__image-img')['src']
         except:
-            image = None
+            image = ''
 
         try:
             price = item.select_one('.s-item__price').text
         except:
-            price = None
+            price = ''
 
-        items = {
+        result = {
             "title": title,
             'link': link,
             "price": price,
-            'description': desc,
             'image': image,
         }
-
+    results.append(result)
     #return items
 
     '''data = {
@@ -69,4 +70,4 @@ def get_ebay_summary(request):
 
     #print('json-data to be sent: ', data)
 
-    return JsonResponse(items)
+    return JsonResponse(result)
