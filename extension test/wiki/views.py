@@ -17,7 +17,6 @@ def index(request):
     return HttpResponse("Hello, world. You're at the ebay index.")
 
 
-# https://pypi.org/project/wikipedia/#description
 def get_ebay_summary(request):
     topic = request.GET.get('topic', None)
     base_url = "https://www.ebay.com/sch/i.html?_nkw={}"
@@ -60,8 +59,7 @@ def get_ebay_summary(request):
             "price": price,
             'image': image,
         }
-    results.append(result)
-    #return items
+        results.append(result)
 
     '''data = {
         'summary': wikipedia.summary(topic, sentences=1),
@@ -70,4 +68,4 @@ def get_ebay_summary(request):
 
     #print('json-data to be sent: ', data)
 
-    return JsonResponse(result)
+    return JsonResponse(results, safe=False)
