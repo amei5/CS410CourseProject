@@ -14,6 +14,7 @@ def get_good_will_results(query):
     results = soup.select("p.b-product_tile-title a")
     product_category = soup.select("div.b-product_tile-category_size")
     prices_list = soup.select("div.b-product_tile-price span.b-price")
+    images = soup.select("div.b-product_tile-top a.b-product_tile_images-link picture.b-product_tile_images-item source")
 
     #results = result[:5]  # Keep only the first 10 anchors
     #product_category = product_category_size[:5]
@@ -30,6 +31,15 @@ def get_good_will_results(query):
         link_to_prod = "https://www.goodwillfinds.com/" + link['href']
         goodwill_results[i]["Link"] = link_to_prod
         i = i + 1
+
+    j = 0
+    for image in images:
+        if j < len(goodwill_results):
+            image_link = image['srcset']
+            goodwill_results[j]["Image"] = image_link
+        else:
+            break
+        j = j + 1
 
     i = 0
     for category in product_category:
