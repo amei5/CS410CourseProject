@@ -21,6 +21,7 @@ def get_ebay_summary(request):
     topic = request.GET.get('topic', None)
     ebay_url = "https://www.ebay.com/sch/i.html?_nkw={}"
     poshmark_url = "https://poshmark.com/search?query=jeans&type=listings&src=dir"
+    goodwill_url = "https://www.goodwillfinds.com/search/?q="
 
     results = []
 
@@ -100,4 +101,24 @@ def get_ebay_summary(request):
         }
         results.append(result)
 
+    goodwill_page = get(goodwill_url + topic)  # Getting page HTML through request
+    soup = BeautifulSoup(goodwill_page.text,'lxml')
+
+    gw_results = soup.select("p.b-product_tile-title a")
+    product_category = soup.select("div.b-product_tile-category_size")
+    prices_list = soup.select("div.b-product_tile-price span.b-price")
+
     return JsonResponse(results, safe=False)
+'''
+    for listing in gw_results[:3]:
+        title = listing.text
+        link = "https://www.goodwillfinds.com/" + listing['href']
+        price = listing.text.strip(' \n\t').split()[3]
+
+            result = {
+                'title': title,
+                'price': price,
+                'link': link,
+             }
+            results.append(result)
+'''

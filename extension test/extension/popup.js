@@ -9,13 +9,17 @@ $(function(){
                 chrome.runtime.sendMessage(
 					{topic: search_topic},
 					function(response) {
-						result = response.farewell;
-						alert(result.summary);
-						
+						results = response.farewell;
+						str = "";
+						for (let i = 0; i <results.length; i++) {
+						    str += (i+1) + ". " + results[i].title + "\n";
+						}
+						alert(str);
+
 						var notifOptions = {
                         type: "basic",
                         title: "WikiPedia Summary For Your Result",
-                        message: result.summary
+                        message: result[0].title
 						};
 						
 						chrome.notifications.create('WikiNotif', notifOptions);
