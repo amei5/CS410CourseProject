@@ -1,34 +1,29 @@
 $(function(){
 
     $('#submit').click(function(){
-		
+
 		var search_topic = $('#search').val();
-		
-				
+
+
 		if (search_topic){
                 chrome.runtime.sendMessage(
 					{topic: search_topic},
 					function(response) {
 						results = response.farewell;
-						str = "";
+						results_str = "";
 						for (let i = 0; i <results.length; i++) {
-						    str += (i+1) + ". " + results[i].title + "\n";
+						    results_str += "<p>"+(i+1) + ". " + results[i].title + " "+"<a href=\"" + results[i].link + "\">Link</a></p>";
 						}
-						alert(str);
+						//alert(link_str);
+						var htmlCode = "<html><body>" + results_str + "</body></html>";
+						var url = "data:text/html," + encodeURIComponent(htmlCode);
 
-						var notifOptions = {
-                        type: "basic",
-                        title: "WikiPedia Summary For Your Result",
-                        message: result[0].title
-						};
-						
-						chrome.notifications.create('WikiNotif', notifOptions);
-						
+                        chrome.tabs.create({url: url, active: false});
 					});
 		}
-			
-			
+
+
 		$('#search').val('');
-		
+
     });
 });
