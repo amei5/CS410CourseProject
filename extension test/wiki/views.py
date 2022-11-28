@@ -9,9 +9,9 @@ from django.http import JsonResponse , HttpResponse ####
 
 import requests
 from requests import get
-import lxml
+#import lxml
 from bs4 import BeautifulSoup
-import cchardet
+#import cchardet
 
 def index(request):
     return HttpResponse("Hello, world. You're at the ebay index.")
@@ -26,6 +26,42 @@ def get_ebay_summary(request):
     results = []
 
     print('topic:', topic)
+
+    # goodwill results
+
+    driver = get(goodwill_url + topic)  # Getting page HTML through request
+    soup = BeautifulSoup(driver.text,
+                         'lxml')  # Parsing content using beautifulsoup. Notice driver.page_source instead of page.content
+
+    gw_results = soup.select("p.b-product_tile-title a")
+    prices_list = soup.select("div.b-product_tile-price span.b-price")
+    images = soup.select(
+        "div.b-product_tile-top a.b-product_tile_images-link picture.b-product_tile_images-item source")
+
+    for title in gw_results[:3]:
+        results.append({
+            "title": title.text
+        })
+
+    i = 0
+    for link in gw_results[:3]:
+        link_to_prod = "https://www.goodwillfinds.com/" + link['href']
+        results[i]["link"] = link_to_prod
+        i = i + 1
+
+    i = 0
+    for price in prices_list[:3]:
+        results[i]["price"] = price.text.strip(' \n\t').split()[3]
+        i = i + 1
+
+    i = 0
+    for image in images:
+        if i < len(results):
+            image_link = image['srcset']
+            results[i]["image"] = image_link
+        else:
+            break
+        i = i + 1
 
     #get ebay results
 
@@ -100,39 +136,5 @@ def get_ebay_summary(request):
             'image': image,
         }
         results.append(result)
-
-    #goodwill results
-
-    driver = get(goodwill_url + topic)  # Getting page HTML through request
-    soup = BeautifulSoup(driver.text, 'lxml')  # Parsing content using beautifulsoup. Notice driver.page_source instead of page.content
-
-    gw_results = soup.select("p.b-product_tile-title a")
-    prices_list = soup.select("div.b-product_tile-price span.b-price")
-    images = soup.select("div.b-product_tile-top a.b-product_tile_images-link picture.b-product_tile_images-item source")
-
-    for title in gw_results[:3]:
-        results.append({
-            "title": title.text
-        })
-
-    i = 0
-    for link in gw_results[:3]:
-        link_to_prod = "https://www.goodwillfinds.com/" + link['href']
-        results[i]["link"] = link_to_prod
-        i = i + 1
-
-    i = 0
-    for price in prices_list[:3]:
-        results[i]["price"] = price.text.strip(' \n\t').split()[3]
-        i = i + 1
-
-    i = 0
-    for image in images:
-        if i < len(results):
-            image_link = image['srcset']
-            results[i]["image"] = image_link
-        else:
-            break
-        i = i + 1
 
     return JsonResponse(results, safe=False)
