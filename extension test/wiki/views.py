@@ -126,7 +126,7 @@ def get_ebay_summary(request):
             link = ''
 
         try:
-            image = tile.find('img').get('data-src')
+            image = tile.find('img')['src']
         except:
             image = ''
 
