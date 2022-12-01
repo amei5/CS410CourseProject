@@ -12,9 +12,8 @@ $(function(){
 						results = response.farewell;
 						results_str = "";
 						for (let i = 0; i <results.length; i++) {
-						    results_str += "<p>"+(i+1) + ". " + results[i].title + " "+"<a href=\"" + results[i].link + "\">Link</a></p>";
+						    results_str += "<p>"+(i+1) + ". " + "<a href=\"" + results[i].link + "\">" + results[i].title + "</a>" + " $" + results[i].price + "</p>" + "<img src=\"" + results[i].image + "\" alt=\"" + results[i].title + "\">";
 						}
-						//alert(link_str);
 						var htmlCode = "<html><body>" + results_str + "</body></html>";
 						var url = "data:text/html," + encodeURIComponent(htmlCode);
 
