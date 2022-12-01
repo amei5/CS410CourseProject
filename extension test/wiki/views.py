@@ -12,6 +12,7 @@ from requests import get
 #import lxml
 from bs4 import BeautifulSoup
 #import cchardet
+import re
 
 def index(request):
     return HttpResponse("Hello, world. You're at the ebay index.")
@@ -136,5 +137,17 @@ def get_ebay_summary(request):
             'image': image,
         }
         results.append(result)
+
+    # Extract the integer from the string price values in the results array, and sort by lowest to highest price
+    for result in results:
+        if type(result['price']) == int:
+            continue
+        result['price'] = float(re.findall("\d+\.\d+", result['price'])[0])
+
+    def customSort(k):
+        return k['price']
+
+    results.sort(key=customSort)
+    print(results)
 
     return JsonResponse(results, safe=False)
