@@ -138,6 +138,21 @@ def get_ebay_summary(request):
         }
         results.append(result)
 
+    filtered_results = []
+    print(results)
+    for result in results:
+        topic_words = topic.lower().split(" ")
+        title_words = title.lower().split(" ")
+        intersection = list(set(topic_words) & set(title_words))
+        print(topic_words)
+        print(title_words)
+        if len(intersection) != 0:
+            filtered_results.append(result)
+    
+    # results = filtered_results
+    print(filtered_results)
+
+
     # Extract the integer from the string price values in the results array, and sort by lowest to highest price
     for result in results:
         if type(result['price']) == int:
