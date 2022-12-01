@@ -10,7 +10,8 @@ $(function(){
 					{topic: search_topic},
 					function(response) {
 						results = response.farewell;
-						results_str = "";
+						//results_str = "";
+						results_str = "<p><table border='0'>";
 						for (let i = 0; i <results.length; i++) {
 						    results_str += "<p>"+(i+1) + ". " + "<a href=\"" + results[i].link + "\">" + results[i].title + "</a>" + " $" + results[i].price + "</p>" + "<img src=\"" + results[i].image + "\" alt=\"" + results[i].title + "\">";
 						}
