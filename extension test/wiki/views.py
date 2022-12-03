@@ -3,15 +3,12 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.shortcuts import render
-import json
 from django.contrib.auth.models import User #####
 from django.http import JsonResponse , HttpResponse ####
 
 import requests
 from requests import get
-#import lxml
 from bs4 import BeautifulSoup
-#import cchardet
 import re
 
 def index(request):
@@ -138,19 +135,28 @@ def get_ebay_summary(request):
         }
         results.append(result)
 
+    # filter out results that do not contain the search topic words
     filtered_results = []
-    print(results)
     for result in results:
-        topic_words = topic.lower().split(" ")
-        title_words = title.lower().split(" ")
-        intersection = list(set(topic_words) & set(title_words))
-        print(topic_words)
-        print(title_words)
-        if len(intersection) != 0:
+        print(result['title'])
+        topic_words = topic.lower().split(' ')
+        title_words = result['title'].lower().split(' ')
+
+        topic_word_missing = False
+        for word in topic_words:
+            if word not in result['title'].lower():
+                topic_word_missing = True   
+        
+        title_words_in_topic_substrings = []
+        for word in title_words:
+            if word in topic.lower():
+                title_words_in_topic_substrings.append(word)
+        
+
+        if not topic_word_missing or len(title_words_in_topic_substrings) == len(topic_words):
             filtered_results.append(result)
     
-    # results = filtered_results
-    print(filtered_results)
+    results = filtered_results
 
 
     # Extract the integer from the string price values in the results array, and sort by lowest to highest price
