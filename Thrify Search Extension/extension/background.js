@@ -4,7 +4,7 @@ var serverhost = 'http://127.0.0.1:8000';
 		function(request, sender, sendResponse) {
 		  
 			  
-			var url = serverhost + '/wiki/get_ebay_summary/?topic='+ encodeURIComponent(request.topic) ;
+			var url = serverhost + '/search/get_search_summary/?topic='+ encodeURIComponent(request.topic) ;
 			
 			console.log(url);
 
