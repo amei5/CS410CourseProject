@@ -21,7 +21,7 @@ $(function(){
 						var htmlCode = "<html><body>" + results_str + "</body></html>";
 						var url = "data:text/html," + encodeURIComponent(htmlCode);
 
-                        chrome.tabs.create({url: url, active: false});
+                        chrome.tabs.create({url: url, active: true});
 					});
 		}
 
