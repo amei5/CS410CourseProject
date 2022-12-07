@@ -15,7 +15,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the ebay index.")
 
 
-def get_ebay_summary(request):
+def get_search_summary(request):
     topic = request.GET.get('topic', None)
     ebay_url = "https://www.ebay.com/sch/i.html?_nkw={}"
     poshmark_url = "https://poshmark.com/search?query="
