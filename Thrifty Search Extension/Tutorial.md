@@ -25,3 +25,4 @@
 1. Extension will show error 'Manifest version 2 is deprecated.' This error can be ignored; the extension will function normally.
 2. Check 'Errors' on the chrome://extensions page or Terminal output for any errors
 3. Make sure extension is refreshed after any code changes
+4. Do not hit 'Enter' when using the extension, make sure to click the search button or else an error will be thrown.
