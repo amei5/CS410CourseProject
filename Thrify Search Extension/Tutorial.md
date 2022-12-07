@@ -7,7 +7,11 @@
 5. Pin the extension to the toolbar to use
 
 # Run Django Server
-1. Install necessary libaries (Django, Beautiful Soup, etc.)
+1. Install necessary libaries
+   1. python -m pip install Django
+   2. python -m pip install beautifulsoup4 
+   3. python -m pip install requests
+   4. There may be more libraries needed than listed below, please refer to terminal errors for any missing ones
 2. Navigate to 'Thrify Search Extension' directory
 3. Enter 'python manage.py runserver' in terminal
 4. Server should start- quit the server with CONTROL-C
