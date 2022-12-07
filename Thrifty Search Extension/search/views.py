@@ -33,8 +33,7 @@ def get_search_summary(request):
 
     gw_results = soup.select("p.b-product_tile-title a")
     prices_list = soup.select("div.b-product_tile-price span.b-price")
-    images = soup.select(
-        "div.b-product_tile-top a.b-product_tile_images-link picture.b-product_tile_images-item source")
+    images = soup.select("article.b-product_tile div.b-product_tile-top a.b-product_tile_images-link picture.b-product_tile_images-item img")
 
     for title in gw_results[:3]:
         results.append({
@@ -55,7 +54,7 @@ def get_search_summary(request):
     i = 0
     for image in images:
         if i < len(results):
-            image_link = image['srcset']
+            image_link = images[2*i]['src']
             results[i]["image"] = image_link
         else:
             break
@@ -138,7 +137,6 @@ def get_search_summary(request):
     # filter out results that do not contain the search topic words
     filtered_results = []
     for result in results:
-        print(result['title'])
         topic_words = topic.lower().split(' ')
         title_words = result['title'].lower().split(' ')
 
@@ -169,6 +167,5 @@ def get_search_summary(request):
         return k['price']
 
     results.sort(key=customSort)
-    print(results)
 
     return JsonResponse(results, safe=False)
