@@ -3,7 +3,7 @@
 1. Go to chrome://extensions
 2. Toggle on 'Developer Mode' in the upper right corner
 3. Click 'Load unpacked'
-4. Select the 'extension' directory in the 'Thrifty Extension Directory'
+4. Select the 'extension' directory in the 'Thrifty Search Extension' directory
 5. Pin the extension to the toolbar to use
 
 # Run Django Server
